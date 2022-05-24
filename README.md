@@ -1,9 +1,20 @@
 
-# Welcome to your CDK Python project!
+# About the project project!
 
-You should explore the contents of this project. It demonstrates a CDK app with an instance of a stack (`assignment_stack`)
-which contains an Amazon SQS queue that is subscribed to an Amazon SNS topic.
+This project deploys a TO-DO python app with postgresql backend on AWS ECS. It contains the following stacks
+* `Networking_stack` - Named as TodoozieNetworking, This will create the newtworking setup of a VPC, Subnets and realted network components
+* `Ecr_stack` - Named as TodoozieEcr, This will create and ECR repository for storing docker images on AWS.
+* `Fargate_Load_balancer_stack` - Named as TodoozieECSFargateLoadBalancer, This will create an Application loadbalancer, ECS cluster, tasks and service with scaling  configuration.
 
+&nbsp;
+
+# Built with
+This project is mainly built with aws cdk - 2.25.0 and  python - 3.10.4</br>
+
+
+&nbsp;
+
+# Getting started
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 This project is set up like a standard Python project.  The initialization process also creates
@@ -43,16 +54,13 @@ At this point you can now synthesize the CloudFormation template for this code.
 $ cdk synth
 ```
 
-You can now begin exploring the source code, contained in the hello directory.
-There is also a very trivial test included that can be run like this:
-
-```
-$ pytest
-```
 
 To add additional dependencies, for example other CDK libraries, just add to
 your requirements.txt file and rerun the `pip install -r requirements.txt`
 command.
+
+Before running the below commands you need to setup aws credentials in your local machine. follow the below link
+ https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html
 
 ## Useful commands
 
@@ -62,4 +70,21 @@ command.
  * `cdk diff`        compare deployed stack with current state
  * `cdk docs`        open CDK documentation
 
-Enjoy!
+&nbsp;
+# contributing
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request to the main branch
+
+&nbsp;
+
+# Acknowledgement
+https://aws.amazon.com/alb/ </br>
+https://aws.amazon.com/iam/ </br>
+https://aws.amazon.com/ecs/</br>
+https://pypi.org/project/aws-cdk.core/
+
