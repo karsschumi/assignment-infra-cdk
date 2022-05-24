@@ -71,9 +71,26 @@ class TodoozieECSFargateAlbStack(Stack):
             health_check=ecs.HealthCheck(command=config.DB_CONTAINER_HEALTH_CHECK_COMMAND,interval=config.DB_CONTAINER_HEALTH_CHECK_INTERVAL,timeout=config.DB_CONTAINER_HEALTH_CHECK_TIMEOUT,retries=config.DB_CONTAINER_HEALTH_RETRY)
         )
         
+        #ecs service with alb
         private_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType(config.ALB_PRIVATE_SUBNET_STRING))
 
         self.lb_ecs_service=albfs(self,"albfs",cluster=self.cluster,memory_limit_mib=config.ECS_SERVICE_MEMORY,cpu=config.ECS_SERVICE_CPU,
                             task_definition=self.fargate_task_definition,health_check_grace_period=config.ECS_SERVICE_HEALTH_CHECK_GRACE_PERIOD
                             ,task_subnets=private_subnets,desired_count=config.ECS_SERVICE_DESIRED_COUNT,listener_port=config.ALB_LISTENER_PORT,public_load_balancer=True,)
         self.lb_ecs_service.target_group.configure_health_check(path=config.ALB_HEALTH_CHECK_PATH,port=config.ALB_HEALTH_CHECK_PORT,unhealthy_threshold_count=config.ALB_HEALTH_CHECK_UNHEALTHY_THRESHOLD_COUNT,interval=config.ALB_HEALTH_CHECK_INTERVAL)
+
+        #ecs service scaling
+        self.scalable_target = self.lb_ecs_service.service.auto_scale_task_count(
+        min_capacity=config.ECS_SERVICE_MIN_COUNT,
+        max_capacity=config.ECS_SERVICE_MAX_COUNT
+        )
+        
+        #cpu based scaling
+        self.scalable_target.scale_on_cpu_utilization("CpuScaling",
+            target_utilization_percent=config.ECS_SERVICE_CPU_UTILIZATION_PERCENT
+        )
+
+        #memory based scaling
+        self.scalable_target.scale_on_memory_utilization("MemoryScaling",
+            target_utilization_percent=config.ECS_SERVICE_MEMORY_UTILIZATION_PERCENT
+        )
