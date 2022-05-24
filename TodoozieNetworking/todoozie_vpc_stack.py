@@ -19,20 +19,16 @@ class TodoozieVPCStack(Stack):
                            # configuration will create 2 groups in 2 AZs = 4 subnets.
                            subnet_configuration=[ec2.SubnetConfiguration(
                                subnet_type=ec2.SubnetType.PUBLIC,
-                               name="Public",
+                               name=config.PUBLIC_SUBNET_NAME,
                                cidr_mask=config.VPC_SUBNET_CIDR_MASK
                            ),
                            ec2.SubnetConfiguration(
                                subnet_type=ec2.SubnetType.PRIVATE_WITH_NAT,
-                               name="Private",
+                               name=config.PRIVATE_SUBNET_NAME,
                                cidr_mask=config.VPC_SUBNET_CIDR_MASK
                            )
                            ],
-                           nat_gateways=2,
+                           nat_gateways=config.NUMBER_OF_NAT_GATEWAYS,
                            )
         CfnOutput(self, "vpcid",
                        value=self.vpc.vpc_id,export_name="vpcid")
-        # CfnOutput(self,"publicsubnets",
-        #                value=self.vpc.select_subnets(subnet_type=ec2.SubnetType('PUBLIC')),export_name="publicsubnets" )
-        # CfnOutput(self,"privatesubnets",
-        #                value=self.vpc.select_subnets(subnet_type=ec2.SubnetType('PRIVATE_WITH_NAT')),export_name="privatesubnets" )
